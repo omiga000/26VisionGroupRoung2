@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/Scau_Work/Taurus/26VisionGroupRound2/build",
+  "command": "D:\\My_Compiler\\Msys2\\ucrt64\\bin\\g++.exe -isystem D:/My_Compiler/Msys2/ucrt64/include/opencv5 -g -o CMakeFiles\\calib.dir\\Src\\Calib.cpp.obj -c D:\\Scau_Work\\Taurus\\26VisionGroupRound2\\Src\\Calib.cpp",
+  "file": "D:/Scau_Work/Taurus/26VisionGroupRound2/Src/Calib.cpp",
+  "output": "D:/Scau_Work/Taurus/26VisionGroupRound2/build/CMakeFiles/calib.dir/Src/Calib.cpp.obj"
+}
+]
