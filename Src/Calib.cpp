@@ -1,6 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/calib3d.hpp>
+#include <opencv2/core/utils/filesystem.hpp>
 
 using namespace std;
 using namespace cv;
@@ -115,7 +116,19 @@ int main()
     cout << "Distortion coefficients:\n" << distCoeffs << endl;
 
     // ========== 7. 保存参数 ==========
-    FileStorage fs("camera_calibration.yml", FileStorage::WRITE);
+    const string resultDir = "D:/Scau_Work/Taurus/26VisionGroupRound2/results";
+    if (!cv::utils::fs::createDirectories(resultDir))
+    {
+        cerr << "Failed to create results directory: " << resultDir << endl;
+        return -1;
+    }
+    const string calibrationPath = resultDir + "/camera_calibration.yml";
+    FileStorage fs(calibrationPath, FileStorage::WRITE);
+    if (!fs.isOpened())
+    {
+        cerr << "Failed to save calibration: " << calibrationPath << endl;
+        return -1;
+    }
     fs << "camera_matrix" << cameraMatrix;
     fs << "distortion_coefficients" << distCoeffs;
     fs << "image_width" << imageSize.width;
@@ -124,7 +137,7 @@ int main()
     fs << "num_images_used" << successCount;
     fs.release();
 
-    cout << "Parameters saved to camera_calibration.yml" << endl;
+    cout << "Parameters saved to " << calibrationPath << endl;
 
 
 

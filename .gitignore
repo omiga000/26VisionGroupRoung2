@@ -1,0 +1,6 @@
+# Track only source code, results, build configuration and this ignore file.
+/*
+!/.gitignore
+!/Src/
+!/results/
+!/CMakeLists.txt

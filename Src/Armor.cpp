@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include<opencv2/geometry.hpp>
 #include <opencv2/calib3d.hpp>
+#include <opencv2/core/utils/filesystem.hpp>
 
 
 using namespace std;
@@ -57,8 +58,15 @@ int main()
     int    frame_count = 0;
     auto   fps_start = chrono::steady_clock::now();
 
+    const string resultDir = "D:/Scau_Work/Taurus/26VisionGroupRound2/results";
+    if (!cv::utils::fs::createDirectories(resultDir))
+    {
+        cerr << "Failed to create results directory: " << resultDir << endl;
+        return -1;
+    }
+
     // 1. 打开 YAML 文件
-    FileStorage fs("D:\\Scau_Work\\Taurus\\26VisionGroupRound2\\build\\camera_calibration.yml", FileStorage::READ);
+    FileStorage fs(resultDir + "/camera_calibration.yml", FileStorage::READ);
 
     if (!fs.isOpened())
     {
@@ -69,6 +77,11 @@ int main()
     // 2. 读取相机内参和畸变系数
     fs["camera_matrix"] >> K;
     fs["distortion_coefficients"] >> D;
+
+    const string recognitionPath = resultDir + "/armor_result.avi";
+    double outputFps = cap.get(CAP_PROP_FPS);
+    if (!(outputFps > 0)) outputFps = 30.0;
+    VideoWriter resultVideo;
 
     while (true)
     {
@@ -274,14 +287,29 @@ int main()
                 Point(10, 70), FONT_HERSHEY_SIMPLEX, 1, Scalar(0, 255, 0), 2);  
         
 
+        // 保存带识别框、距离和 FPS 的结果帧
+        if (!resultVideo.isOpened())
+        {
+            resultVideo.open(recognitionPath, VideoWriter::fourcc('M', 'J', 'P', 'G'),
+                             outputFps, frame.size());
+            if (!resultVideo.isOpened())
+            {
+                cerr << "Failed to save recognition video: " << recognitionPath << endl;
+                return -1;
+            }
+        }
+        resultVideo.write(frame);
+
         // ---------- 7. 显示 ----------
         imshow("Armor", frame);
         //imshow("mask",mask);
 
-        int key = waitKey(30);
+        int key = waitKey(1);
         if (key == 27 || key == 'q') break;
     }
 
+    resultVideo.release();
+    cout << "Recognition video saved to " << recognitionPath << endl;
     cap.release();
     destroyAllWindows();
     return 0;
