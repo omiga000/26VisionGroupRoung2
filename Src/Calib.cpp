@@ -11,7 +11,7 @@ string imageDir = "D:\\Scau_Work\\Taurus\\26VisionGroupRound2\\calibration_image
 int main()
 {
     // ========== 1. 棋盘格参数 ==========
-    Size boardSize(11, 8);       // 内角点数量：横向 7，纵向 10
+    Size boardSize(11, 8);       // 内角点数量：横向 11，纵向 8
     float squareSize = 50.0f;    // 格子实际边长 (mm)
 
     // ========== 2. 找到所有标定图片 ==========
